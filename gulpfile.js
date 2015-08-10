@@ -22,22 +22,22 @@ gulp.task('js', function() {
     .pipe( uglify() )
     .pipe( gulp.dest(buildFolder) )
     ;
-})
+});
 
 
 
-// gulp.task('test', function () {
-//   return gulp.src('./test.js', { read: false })
-//       .pipe(mocha({
-//         ui: 'exports',
-//         reporter: 'spec'
-//       }))
-//     ;
-// });
+gulp.task('test', ['js'], function () {
+  return gulp.src('./test.js', { read: false })
+      .pipe(mocha({
+        ui: 'exports',
+        reporter: 'spec'
+      }))
+    ;
+});
 
 
 gulp.task('build', function(cb) {
-  runSequence('js' /*, 'test'*/, cb);
+  runSequence('js', 'test', cb);
 });
 
 

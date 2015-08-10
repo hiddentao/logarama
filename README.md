@@ -8,7 +8,7 @@ Yet another simple logging library for the browser with minimum levels and hiera
 * Create child loggers which inherit parent loggers' options and yet can be customized.
 * Change logging level at runtime.
 * Built-in smart log message formatting, with customizability.
-* Support AMD, CommonJS and `window` object out of the box.
+* Supports [UMD](https://github.com/umdjs/umd) for easy integration within your project.
 
 ## Installation
 

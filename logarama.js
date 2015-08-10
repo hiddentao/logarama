@@ -19,7 +19,7 @@
 
   class Logger {
 
-    constructor (tag = null, options = {}) {
+    constructor (options = {}) {
       this._children = [];
       
       this._tag = options.tag || '';
@@ -31,12 +31,11 @@
 
 
     create (tag, options = {}) {
-      tag = (this._tag.length ? this._tag : '/' : '') + tag;
-
+      options.tag = (this._tag.length ? this._tag : '/' : '') + tag;
       options.minLevel = options.minLevel || this._minLevel;
       options.formatter = options.formatter || this._formatter;
 
-      let child = new Logger(tag, options);
+      let child = new Logger(options);
 
       this._children.push(child);
 
@@ -91,7 +90,7 @@
     _constructLogMethod (level) {
       var self = this;
 
-      if (LEVELS[level] >= LEVELS[this._minLevel]) {
+      if (LEVELS[level] >= LEVELS[self._minLevel]) {
         self[level] = function() {
           Array.prototype.slice.call(arguments).forEach(function(arg) {
             self._writeToLog(level, self._format(arg));
