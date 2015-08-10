@@ -1,0 +1,36 @@
+{
+  "name": "logarama",
+  "version": "1.0.0",
+  "description": "Logging for the browser, logging level, hierarchical child loggers, etc",
+  "main": "logarama.min.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hiddentao/logarama.git"
+  },
+  "keywords": [
+    "clock",
+    "timer",
+    "daemon"
+  ],
+  "author": "Ramesh Nair <ram@hiddentao.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hiddentao/logarama/issues"
+  },
+  "homepage": "https://github.com/hiddentao/logarama",
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "gulp": "~3.8.1",
+    "gulp-babel": "~5.2.0",
+    "gulp-concat": "~2.2.0",
+    "gulp-jshint": "~1.6.3",
+    "gulp-mocha": "~0.4.1",
+    "gulp-uglify": "~0.3.0",
+    "run-sequence": "~0.3.6",
+    "sinon": "~1.10.2",
+    "sinon-chai": "~2.5.0"
+  }
+}
