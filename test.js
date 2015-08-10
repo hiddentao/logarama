@@ -146,7 +146,8 @@ test['default argument formatting'] = {
   },
 
   'simple': function() {
-    logger.info(1, 1.2234234, false, true, null, undefined, 'str2');
+    this.logger.info(1, 1.2234234, false, true, null, undefined, 'str2');
+    
     spy.info.should.have.been.calledWithExactly('[INFO]: 1');
     spy.info.should.have.been.calledWithExactly('[INFO]: 1.2234234');
     spy.info.should.have.been.calledWithExactly('[INFO]: false');
