@@ -20,8 +20,6 @@ $ npm install logarama
 
 ## How to use
 
-**Levels**
-
 ```js
 var Logger = require('logarama');
 
