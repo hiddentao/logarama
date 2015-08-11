@@ -14,7 +14,9 @@ Yet another simple logging library for the browser with minimum levels and hiera
 
 ## Installation
 
+```bash
 $ npm install logarama
+```
 
 ## How to use
 
