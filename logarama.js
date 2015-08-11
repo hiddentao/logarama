@@ -31,7 +31,7 @@
 
 
     create (tag, options = {}) {
-      options.tag = (this._tag.length ? this._tag : '/' : '') + tag;
+      options.tag = (this._tag.length ? this._tag + '/' : '') + tag;
       options.minLevel = options.minLevel || this._minLevel;
       options.format = options.format || this._format;
 

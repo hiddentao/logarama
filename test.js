@@ -200,10 +200,64 @@ test['default formatting'] = {
     },
 
     'Circular references': function() {
+      var obj = {
+        key1: 1.2,
+      }
 
+      obj.key2 = obj;
+
+      this.logger.info(obj);
+      spy.info.should.have.been.calledWithExactly('[INFO]: [Object with circular references]');
     }
   }
 };
+
+
+
+
+test['custom formatting'] = function() {
+  var logger = new Logger({
+    format: function(arg) {
+      return '1' + arg;
+    }
+  });
+
+  logger.info(1, 1.2234234, false, null, undefined, 'str2', {}, [2]);
+
+  spy.info.should.have.been.calledWithExactly('[INFO]: 11');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 11.2234234');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1false');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1false');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1null');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1undefined');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1str2');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 1[object Object]');
+  spy.info.should.have.been.calledWithExactly('[INFO]: 12');
+};
+
+
+
+test['child logger'] = {
+  'default': function() {
+    var logger = new Logger(),
+      childLogger = logger.create('mah');
+
+    childLogger.info(1);
+    spy.info.should.have.been.calledWithExactly('mah[INFO]: 1');
+  },
+
+  'parent tag as prefix': function() {
+    var logger = new Logger({
+      tag: 'blah'
+    }),
+      childLogger = logger.create('mah');
+
+    childLogger.info(1);
+    spy.info.should.have.been.calledWithExactly('blah/mah[INFO]: 1');
+  }
+
+};
+
 
 
 
