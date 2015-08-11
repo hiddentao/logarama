@@ -30,8 +30,8 @@
     }
 
 
-    create (tag, options = {}) {
-      options.tag = (this._tag.length ? this._tag + '/' : '') + tag;
+    create (options = {}) {
+      options.tag = (this._tag.length ? this._tag + '/' : '') + (options.tag || '');
       options.minLevel = options.minLevel || this._minLevel;
       options.format = options.format || this._format;
 

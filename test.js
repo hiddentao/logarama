@@ -240,21 +240,78 @@ test['custom formatting'] = function() {
 test['child logger'] = {
   'default': function() {
     var logger = new Logger(),
-      childLogger = logger.create('mah');
+      childLogger = logger.create();
 
     childLogger.info(1);
-    spy.info.should.have.been.calledWithExactly('mah[INFO]: 1');
+    spy.info.should.have.been.calledWithExactly('[INFO]: 1');
   },
 
   'parent tag as prefix': function() {
     var logger = new Logger({
       tag: 'blah'
     }),
-      childLogger = logger.create('mah');
+      childLogger = logger.create({
+        tag: 'mah'
+      });
 
     childLogger.info(1);
     spy.info.should.have.been.calledWithExactly('blah/mah[INFO]: 1');
-  }
+  },
+
+  'inherits parent level': function() {
+    var logger = new Logger({
+      tag: 'blah',
+      minLevel: 'error',
+    }),
+      childLogger = logger.create();
+
+    childLogger.warn(1);
+    spy.warn.should.not.have.been.called;
+  },
+
+  'can override parent level': function() {
+    var logger = new Logger({
+      tag: 'blah',
+      minLevel: 'error',
+    }),
+      childLogger = logger.create({
+        minLevel: 'debug'
+      });
+
+    childLogger.warn(1);
+    spy.warn.should.have.been.calledOnce;
+  },
+
+  'inherits parent formatter': function() {
+    var logger = new Logger({
+      format: function() {
+        return 2;
+      }
+    }),
+      childLogger = logger.create({
+        tag: 'mah'
+      });
+
+    childLogger.warn(1);
+    spy.warn.should.have.been.calledWithExactly('mah[WARN]: 2');
+  },
+
+  'can override parent formatter': function() {
+    var logger = new Logger({
+      format: function() {
+        return 2;
+      }
+    }),
+      childLogger = logger.create({
+        tag: 'mah',
+        format: function() {
+          return 3;
+        }
+      });
+
+    childLogger.warn(1);
+    spy.warn.should.have.been.calledWithExactly('mah[WARN]: 3');
+  },
 
 };
 
