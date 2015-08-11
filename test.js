@@ -316,7 +316,7 @@ test['child logger'] = {
   'tracks parent level changes': function() {
     var logger = new Logger({
       minLevel: 'error'
-    }),
+    });
     
     var childLogger = logger.create({
       minLevel: 'warn'
