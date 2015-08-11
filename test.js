@@ -104,7 +104,7 @@ test['set level at runtime'] = function() {
   logger.trace(1);
   spy.debug.should.not.have.been.called;
 
-  logger.setLevel('trace');
+  logger.setMinLevel('trace');
 
   logger.trace(1);
   spy.trace.should.have.been.calledWithExactly('[TRACE]: 1');
@@ -325,7 +325,7 @@ test['child logger'] = {
     childLogger.info(1);
     spy.info.should.not.have.been.called;
 
-    logger.setLevel('info');
+    logger.setMinLevel('info');
 
     childLogger.info(1);
     spy.info.should.have.been.calledWithExactly('[INFO]: 1');

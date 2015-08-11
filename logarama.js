@@ -43,12 +43,12 @@
     }
 
 
-    setLevel (minLevel) {
+    setMinLevel (minLevel) {
       this._minLevel = minLevel;
       this._initMethods();
 
       this._children.forEach( (c) => {
-        c.setLevel(minLevel);
+        c.setMinLevel(minLevel);
       });
     }
 
