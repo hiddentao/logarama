@@ -19,10 +19,15 @@
 
   class Logger {
 
-    constructor (options = {}) {
+    constructor (tag = null, options = {}) {
       this._children = [];
       
-      this._tag = options.tag || '';
+      if (1 === arguments.length && 'string' !== typeof tag) {
+        options = tag || {};
+        tag = null;
+      }
+
+      this._tag = tag || '';
       this._minLevel = options.minLevel || 'debug';
       this._format = options.format || this._format;
 
@@ -30,12 +35,17 @@
     }
 
 
-    create (options = {}) {
-      options.tag = (this._tag.length ? this._tag + '/' : '') + (options.tag || '');
+    create (tag = null, options = {}) {
+      if (1 === arguments.length && 'string' !== typeof tag) {
+        options = tag || {};
+        tag = null;
+      }
+
+      tag = (this._tag.length ? this._tag + '/' : '') + (tag || '');
       options.minLevel = options.minLevel || this._minLevel;
       options.format = options.format || this._format;
 
-      let child = new Logger(options);
+      let child = new Logger(tag, options);
 
       this._children.push(child);
 

@@ -86,9 +86,7 @@ Add a tag (prefix) to your messages:
 ```js
 var Logger = require('logarama');
 
-var logger = new Logger({
-  tag: 'app'
-});
+var logger = new Logger('app');
 
 logger.trace(1);
 logger.debug(2);
@@ -140,8 +138,7 @@ Child loggers inherit their parent's properties.
 ```js
 var Logger = require('logarama');
 
-var logger = new Logger({
-  tag: 'parent',
+var logger = new Logger('parent', {
   minLevel: 'info',
 });
 
@@ -159,14 +156,11 @@ However, child tags are prefixed by their parents' tags:
 ```js
 var Logger = require('logarama');
 
-var logger = new Logger({
-  tag: 'parent',
+var logger = new Logger('parent', {
   minLevel: 'info',
 });
 
-var child = logger.create({
-  tag: 'child'
-});
+var child = logger.create('child');
 
 child.info(2);
 
@@ -180,13 +174,11 @@ Parent level changes get propagated down to children:
 ```js
 var Logger = require('logarama');
 
-var logger = new Logger({
-  tag: 'parent',
+var logger = new Logger('parent', {
   minLevel: 'warn',
 });
 
-var child = logger.create({
-  tag: 'child',
+var child = logger.create('child', {
   minLevel: 'error',
 });
 

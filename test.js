@@ -114,9 +114,7 @@ test['set level at runtime'] = function() {
 
 
 test['set tag'] = function() {
-  var logger = new Logger({
-    tag: 'app32'
-  });
+  var logger = new Logger('app32');
 
   logger.info(1);
   spy.info.should.have.been.calledWithExactly('app32[INFO]: 1');
@@ -126,9 +124,7 @@ test['set tag'] = function() {
 
 
 test['multiple arguments'] = function() {
-  var logger = new Logger({
-    tag: 'app32'
-  });
+  var logger = new Logger('app32');
 
   logger.info(1, 2, 3);
   spy.info.should.have.been.calledThrice;
@@ -247,20 +243,15 @@ test['child logger'] = {
   },
 
   'parent tag as prefix': function() {
-    var logger = new Logger({
-      tag: 'blah'
-    }),
-      childLogger = logger.create({
-        tag: 'mah'
-      });
+    var logger = new Logger('blah'),
+      childLogger = logger.create('mah');
 
     childLogger.info(1);
     spy.info.should.have.been.calledWithExactly('blah/mah[INFO]: 1');
   },
 
   'inherits parent level': function() {
-    var logger = new Logger({
-      tag: 'blah',
+    var logger = new Logger('blah', {
       minLevel: 'error',
     }),
       childLogger = logger.create();
@@ -270,8 +261,7 @@ test['child logger'] = {
   },
 
   'can override parent level': function() {
-    var logger = new Logger({
-      tag: 'blah',
+    var logger = new Logger('blah', {
       minLevel: 'error',
     }),
       childLogger = logger.create({
@@ -288,9 +278,7 @@ test['child logger'] = {
         return 2;
       }
     }),
-      childLogger = logger.create({
-        tag: 'mah'
-      });
+      childLogger = logger.create('mah');
 
     childLogger.warn(1);
     spy.warn.should.have.been.calledWithExactly('mah[WARN]: 2');
@@ -302,8 +290,7 @@ test['child logger'] = {
         return 2;
       }
     }),
-      childLogger = logger.create({
-        tag: 'mah',
+      childLogger = logger.create('mah', {
         format: function() {
           return 3;
         }
