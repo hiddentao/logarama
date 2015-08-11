@@ -1,7 +1,7 @@
 {
   "name": "logarama",
   "version": "1.0.0",
-  "description": "Logging for the browser, logging level, hierarchical child loggers, etc",
+  "description": "Logging for the browser, logging levels, hierarchical child loggers, smart formatting, etc",
   "main": "logarama.min.js",
   "scripts": {
     "build": "gulp build"

@@ -24,7 +24,7 @@
       
       this._tag = options.tag || '';
       this._minLevel = options.minLevel || 'debug';
-      this._formatter = options.formatter || this._format;
+      this._format = options.format || this._format;
 
       this._initMethods();
     }
@@ -33,7 +33,7 @@
     create (tag, options = {}) {
       options.tag = (this._tag.length ? this._tag : '/' : '') + tag;
       options.minLevel = options.minLevel || this._minLevel;
-      options.formatter = options.formatter || this._formatter;
+      options.format = options.format || this._format;
 
       let child = new Logger(options);
 
@@ -58,7 +58,7 @@
 
       // Error
       if (arg instanceof Error) {
-        lines = (arg.stack instanceof Array ? arg.stack.join("\n") : arg.stack);
+        lines = (arg.stack instanceof Array ? arg.stack.join("\n") : this._format(arg.stack));
       } 
       // Array
       else if (arg instanceof Array) {

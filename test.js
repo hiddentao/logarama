@@ -140,14 +140,14 @@ test['multiple arguments'] = function() {
 
 
 
-test['default argument formatting'] = {
+test['default formatting'] = {
   beforeEach: function() {
     this.logger = new Logger();
   },
 
   'simple': function() {
     this.logger.info(1, 1.2234234, false, true, null, undefined, 'str2');
-    
+
     spy.info.should.have.been.calledWithExactly('[INFO]: 1');
     spy.info.should.have.been.calledWithExactly('[INFO]: 1.2234234');
     spy.info.should.have.been.calledWithExactly('[INFO]: false');
@@ -155,16 +155,55 @@ test['default argument formatting'] = {
     spy.info.should.have.been.calledWithExactly('[INFO]: null');
     spy.info.should.have.been.calledWithExactly('[INFO]: undefined');
     spy.info.should.have.been.calledWithExactly('[INFO]: str2');
+  },
+
+
+  'Error': function() {
+    var error = new Error('test');
+
+    this.logger.error(error);
+    spy.error.should.have.been.calledWithExactly('[ERROR]: ' + error.stack);
+
+    error.stack = [123, 456];
+    this.logger.error(error);
+    spy.error.should.have.been.calledWithExactly("[ERROR]: 123\n456");
+  },
+
+
+  'Array': function() {
+    var arr = [1, 2, 3];
+
+    this.logger.info(arr);
+    spy.info.should.have.been.calledWithExactly('[INFO]: ' + arr.join("\n"));
+  },
+
+
+  'Object': {
+    'JSON stringified': function() {
+      var obj = {
+        key1: 1.2,
+        key2: {
+          key2_1: 'abc',
+          key2_2: false
+        },
+        key3: function() {},
+        key4: [1,2,3,4],
+        key5: [
+          {
+            key5_1: true            
+          }
+        ]
+      }
+
+      this.logger.info(obj);
+      spy.info.should.have.been.calledWithExactly('[INFO]: ' + JSON.stringify(obj, null, 2));
+    },
+
+    'Circular references': function() {
+
+    }
   }
 };
-
-
-
-
-
-
-
-
 
 
 
