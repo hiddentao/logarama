@@ -25,11 +25,9 @@ var Logger = require('logarama');
 
 var logger = new Logger();
 
-
 logger.debug('this', 'is', 'an', 'array', [1,2,3]);
 
 /*
-
 [DEBUG]: this
 [DEBUG]: is
 [DEBUG]: an
@@ -37,7 +35,6 @@ logger.debug('this', 'is', 'an', 'array', [1,2,3]);
 [DEBUG]: 1
 2
 3
-
 */
 ```
 
@@ -58,9 +55,7 @@ logger.warn(4);
 logger.error(5);
 
 /*
-
 app[ERROR]: 5
-
 */
 ```
 
@@ -75,15 +70,11 @@ var logger = new Logger({
 });
 
 logger.debug(2);
-
 logger.setMinLevel('debug');
-
 logger.debug(3);
 
 /*
-
 app[DEBUG]: 3
-
 */
 ```
 
@@ -106,14 +97,12 @@ logger.warn(4);
 logger.error(5);
 
 /*
-
 app[TRACE]: 1
    (anonymous function) ...
 app[DEBUG]: 2
 app[INFO]: 3
 app[WARN]: 4
 app[ERROR]: 5
-
 */
 ```
 
@@ -134,7 +123,6 @@ var logger = new Logger({
 logger.debug(2, null, undefined, false, 'str', 23.2, [1,2,3]);
 
 /*
-
 app[DEBUG]: {2}
 app[DEBUG]: {null}
 app[DEBUG]: {undefined}
@@ -142,7 +130,6 @@ app[DEBUG]: {false}
 app[DEBUG]: {str}
 app[DEBUG]: {23.2}
 app[DEBUG]: {1,2,3}
-
 */
 ```
 
@@ -159,14 +146,11 @@ var logger = new Logger({
 });
 
 var child = logger.create();
-
 child.debug(2);
 child.info(2);
 
 /*
-
 parent[INFO]: 2
-
 */
 ```
 
@@ -187,9 +171,7 @@ var child = logger.create({
 child.info(2);
 
 /*
-
 parent/child[INFO]: 2
-
 */
 ```
 
@@ -209,15 +191,11 @@ var child = logger.create({
 });
 
 child.info(2);
-
 logger.setMinLevel('info');
-
 child.info(3);
 
 /*
-
 parent/child[INFO]: 3
-
 */
 ```
 
