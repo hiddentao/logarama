@@ -313,6 +313,24 @@ test['child logger'] = {
     spy.warn.should.have.been.calledWithExactly('mah[WARN]: 3');
   },
 
+  'tracks parent level changes': function() {
+    var logger = new Logger({
+      minLevel: 'error'
+    }),
+    
+    var childLogger = logger.create({
+      minLevel: 'warn'
+    });
+
+    childLogger.info(1);
+    spy.info.should.not.have.been.called;
+
+    logger.setLevel('info');
+
+    childLogger.info(1);
+    spy.info.should.have.been.calledWithExactly('[INFO]: 1');
+  },
+
 };
 
 
