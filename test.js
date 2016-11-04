@@ -77,6 +77,8 @@ test['set level'] = function() {
   var logger = new Logger({
     minLevel: 'warn'
   });
+  
+  logger.minLevel().should.eql('warn');
 
   logger.trace(1);
   spy.trace.should.not.have.been.called;
@@ -101,10 +103,14 @@ test['set level at runtime'] = function() {
     minLevel: 'warn'
   });
 
+  logger.minLevel().should.eql('warn');
+
   logger.trace(1);
   spy.debug.should.not.have.been.called;
 
   logger.setMinLevel('trace');
+
+  logger.minLevel().should.eql('trace');
 
   logger.trace(1);
   spy.trace.should.have.been.calledWithExactly('[TRACE]: 1');

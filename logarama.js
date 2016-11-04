@@ -52,6 +52,9 @@
       return child;
     }
 
+    minLevel() {
+      return this._minLevel;
+    }
 
     setMinLevel (minLevel) {
       this._minLevel = minLevel;

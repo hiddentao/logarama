@@ -69,8 +69,14 @@ var logger = new Logger({
   minLevel: 'error'
 });
 
+console.log(logger.minLevel()) /* error */
+
 logger.debug(2);
+
 logger.setMinLevel('debug');
+
+console.log(logger.minLevel()) /* debug */
+
 logger.debug(3);
 
 /*
