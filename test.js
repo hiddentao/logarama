@@ -1,7 +1,8 @@
 "use strict";
 
 
-var sinon = require('sinon');
+var sinon = require('sinon'),
+  _ = require('lodash');
 
 var chai = require('chai'),
   expect = chai.expect,
@@ -163,25 +164,44 @@ test['default formatting'] = {
   'Error': function() {
     var error = new Error('test');
 
+    error.stack = null;
     this.logger.error(error);
-    spy.error.should.have.been.calledWithExactly('[ERROR]: ' + error.stack);
+    spy.error.should.have.been.calledWithExactly('[ERROR]: Error: test');
 
     error.stack = [123, 456];
-    this.logger.error(error);
-    spy.error.should.have.been.calledWithExactly("[ERROR]: 123\n456");
+    this.logger.warn(error);
+    spy.warn.should.have.been.calledWithExactly("[WARN]: [");
+    spy.warn.should.have.been.calledWithExactly("[WARN]:   123");
+    spy.warn.should.have.been.calledWithExactly("[WARN]:   456");
+    spy.warn.should.have.been.calledWithExactly("[WARN]: ]");
   },
 
 
-  'Array': function() {
-    var arr = [1, 2, 3];
-
-    this.logger.info(arr);
-    spy.info.should.have.been.calledWithExactly('[INFO]: ' + arr.join("\n"));
+  'Array': {
+    'empty': function() {
+      this.logger.info([]);
+      spy.info.should.have.been.calledWithExactly('[INFO]: []');            
+    },
+    'non-empty': function() {
+      this.logger.info([1, 2, 3]);
+      spy.info.should.have.been.calledWithExactly('[INFO]: [');      
+      spy.info.should.have.been.calledWithExactly('[INFO]:   1');      
+      spy.info.should.have.been.calledWithExactly('[INFO]:   2');      
+      spy.info.should.have.been.calledWithExactly('[INFO]:   3');      
+      spy.info.should.have.been.calledWithExactly('[INFO]: ]');      
+    }
   },
 
 
   'Object': {
-    'JSON stringified': function() {
+    'empty': function() {
+      var obj = {};
+
+      this.logger.info(obj);
+      spy.info.should.have.been.calledWithExactly('[INFO]: {}');
+    },
+    
+    'non-empty': function() {
       var obj = {
         key1: 1.2,
         key2: {
@@ -198,7 +218,35 @@ test['default formatting'] = {
       }
 
       this.logger.info(obj);
-      spy.info.should.have.been.calledWithExactly('[INFO]: ' + JSON.stringify(obj, null, 2));
+      _.flatten(spy.info.args).should.eql([
+        '[INFO]: {',
+        '[INFO]:   "key1":',
+        '[INFO]:     1.2',
+        '[INFO]:   "key2":',
+        '[INFO]:     {',
+        '[INFO]:       "key2_1":',
+        '[INFO]:         abc',
+        '[INFO]:       "key2_2":',
+        '[INFO]:         false',
+        '[INFO]:     }',
+        '[INFO]:   "key3":',
+        '[INFO]:     function () {}',
+        '[INFO]:   "key4":',
+        '[INFO]:     [',
+        '[INFO]:       1',
+        '[INFO]:       2',
+        '[INFO]:       3',
+        '[INFO]:       4',
+        '[INFO]:     ]',
+        '[INFO]:   "key5":',
+        '[INFO]:     [',
+        '[INFO]:       {',
+        '[INFO]:         "key5_1":',
+        '[INFO]:           true',
+        '[INFO]:       }',
+        '[INFO]:     ]',
+        '[INFO]: }',        
+      ]);
     },
 
     'Circular references': function() {

@@ -68,33 +68,77 @@
     }
 
 
-    _defaultFormat (arg) {
-      let lines = '';
-
+    __defaultFormatHelper (arg, prefix) {
+      prefix = prefix || ''
+      
+      const lines = []
+      
+      lines.add = (strOrArray) => {
+        [].concat(strOrArray).forEach((s) => {
+          lines.push(`${prefix}${s}`)
+        })
+      }
+      
+      const childPrefix = `  `
+      
       // Error
       if (arg instanceof Error) {
-        lines = (arg.stack instanceof Array ? arg.stack.join("\n") : this._format(arg.stack));
+        if (arg.stack) {
+          lines.add(this.__defaultFormatHelper(arg.stack))
+        } else {
+          lines.add('' + arg)
+        }
       } 
       // Array
       else if (arg instanceof Array) {
-        lines = arg.join("\n");          
-      }
-      // Object
-      else if (arg instanceof Object) {
-        try {
-          lines = JSON.stringify(arg, null, 2);
-        } catch (err) {
-          // json error
-          lines = '[Object with circular references]';
+        if (!arg.length) {
+          lines.add('[]')
+        } else {
+          lines.add('[')
+          
+          arg.forEach((a) => {
+            lines.add(this.__defaultFormatHelper(a, childPrefix))
+          })
+          
+          lines.add(']')      
         }
       }
-      // everything else
-      else {
-        lines = arg + '';
+      // Object (but not null)
+      else if (arg && typeof arg === 'object') {
+        if (!Object.keys(arg).length) {
+          lines.add('{}')
+        } else {
+          lines.add('{')
+          
+          for (let k in arg) {
+            lines.add(`${childPrefix}"${k}":`)
+            lines.add(this.__defaultFormatHelper(arg[k], `${childPrefix}${childPrefix}`))
+          }
+          
+          lines.add('}')      
+        }
       }
-
-      return lines;
+      // everything else - primitive values, functions
+      else {
+        lines.add(arg + '');
+      }
+      
+      return lines;      
     }
+
+
+    _defaultFormat (arg) {
+      try {
+        return this.__defaultFormatHelper(arg)
+      } catch (err) {
+        if ('RangeError' === err.name) {
+          return '[Object with circular references]';
+        } else {
+          throw err;
+        }
+      }
+    }
+    
     
     
     _defaultOutput (level, tag, msg) {
