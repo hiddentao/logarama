@@ -230,7 +230,7 @@ test['default formatting'] = {
         '[INFO]:         false',
         '[INFO]:     }',
         '[INFO]:   "key3":',
-        '[INFO]:     function () {}',
+        '[INFO]:     (function)',
         '[INFO]:   "key4":',
         '[INFO]:     [',
         '[INFO]:       1',

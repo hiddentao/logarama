@@ -118,7 +118,11 @@
           lines.add('}')      
         }
       }
-      // everything else - primitive values, functions
+      // Object (but not null)
+      else if (typeof arg === 'function') {
+        lines.add('(function)');
+      }
+      // everything else - primitive values
       else {
         lines.add(arg + '');
       }
