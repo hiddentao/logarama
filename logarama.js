@@ -29,7 +29,8 @@
 
       this._tag = tag || '';
       this._minLevel = options.minLevel || 'debug';
-      this._format = options.format || this._format;
+      this._format = options.format || this._defaultFormat;
+      this._output = options.output || this._defaultOutput;
 
       this._initMethods();
     }
@@ -44,8 +45,9 @@
       tag = (this._tag.length ? this._tag + '/' : '') + (tag || '');
       options.minLevel = options.minLevel || this._minLevel;
       options.format = options.format || this._format;
+      options.output = options.output || this._output;
 
-      let child = new Logger(tag, options);
+      const child = new Logger(tag, options);
 
       this._children.push(child);
 
@@ -66,8 +68,8 @@
     }
 
 
-    _format (arg) {
-      var lines = '';
+    _defaultFormat (arg) {
+      let lines = '';
 
       // Error
       if (arg instanceof Error) {
@@ -93,18 +95,25 @@
 
       return lines;
     }
+    
+    
+    _defaultOutput (level, tag, msg) {
+      console[level](`${tag}[${level.toUpperCase()}]: ${msg}`);
+    }
 
 
     _writeToLog (level, msg) {
-      console[level].call(console, `${this._tag}[${level.toUpperCase()}]: ${msg}`);
+      [].concat(msg).forEach((str) => {
+        this._output(level, this._tag, str)
+      });
     }
 
 
     _constructLogMethod (level) {
-      var self = this;
-
+      const self = this
+      
       if (LEVELS[level] >= LEVELS[self._minLevel]) {
-        self[level] = function() {
+        this[level] = function() {
           Array.prototype.slice.call(arguments).forEach(function(arg) {
             self._writeToLog(level, self._format(arg));
           });

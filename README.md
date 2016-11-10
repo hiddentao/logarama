@@ -8,7 +8,7 @@ Yet another simple logging library for the browser with minimum levels and hiera
 * An instantiable `Logger` class - allowing for multiple separate logger instances which can be individually controlled.
 * Create child loggers which inherit parent loggers' options and yet can be customized.
 * Change logging level (and children's logging levels) at runtime.
-* Built-in smart log message formatting, with customizability.
+* Overrideable message formatting and output targets.
 * Supports [UMD](https://github.com/umdjs/umd) for easy integration within your project.
 * Small (<1KB).
 
@@ -42,8 +42,6 @@ By default the minimum logging level is `debug`. You can override this:
 
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger({
   minLevel: 'error'
 });
@@ -63,8 +61,6 @@ Change logging level at runtime:
 
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger({
   minLevel: 'error'
 });
@@ -90,8 +86,6 @@ Add a tag (prefix) to your messages:
 
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger('app');
 
 logger.trace(1);
@@ -116,8 +110,6 @@ You can override the built-in argument formatter with your own:
 
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger({
   format: function(arg) {
     return '{' + arg + '}';
@@ -137,13 +129,59 @@ app[DEBUG]: {1,2,3}
 */
 ```
 
+If you return an array of strings from your custom formatter, each string 
+gets output on its own line:
+
+```js
+var logger = new Logger({
+  format: function(arg) {
+    return ['{', arg, '}'];
+  }
+});
+
+logger.debug(2);
+
+/*
+app[DEBUG]: {
+app[DEBUG]: 2
+app[DEBUG]: }
+*/
+```
+
+**Output targets**
+
+
+The default output target is the `console`. You can override this with your 
+own:
+
+
+```js
+var logMessagesToSend = [];
+
+var logger = new Logger('Routing', {
+  output: function(level, tag, msg) {
+    logMessagesToSend.push([level, tag, msg])
+  }
+});
+
+logger.debug(2);
+logger.warn('test')
+
+console.log(logMessagesToSend);
+/*
+[
+  ['debug', 'Routing', '2'],
+  ['warn', 'Routing', 'test'],
+]
+*/
+```
+
+
 **Child loggers**
 
 Child loggers inherit their parent's properties.
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger('parent', {
   minLevel: 'info',
 });
@@ -160,8 +198,6 @@ parent[INFO]: 2
 However, child tags are prefixed by their parents' tags:
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger('parent', {
   minLevel: 'info',
 });
@@ -178,8 +214,6 @@ parent/child[INFO]: 2
 Parent level changes get propagated down to children:
 
 ```js
-var Logger = require('logarama');
-
 var logger = new Logger('parent', {
   minLevel: 'warn',
 });
