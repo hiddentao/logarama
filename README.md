@@ -5,10 +5,10 @@
 Yet another simple logging library for the browser with minimum levels and hierarchical loggers.
 
 * All log methods map to same-named `console` methods.
-* An instantiable `Logger` class - allowing for multiple separate logger instances which can be individually controlled.
+* An instantiate-able `Logger` class - allowing for multiple separate logger instances which can be individually controlled.
 * Create child loggers which inherit parent loggers' options and yet can be customized.
 * Change logging level (and children's logging levels) at runtime.
-* Overrideable message formatting and output targets.
+* Override-able message formatting and output targets.
 * Supports [UMD](https://github.com/umdjs/umd) for easy integration within your project.
 * Small (<1KB).
 
