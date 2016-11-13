@@ -119,13 +119,7 @@ var logger = new Logger({
 logger.debug(2, null, undefined, false, 'str', 23.2, [1,2,3]);
 
 /*
-app[DEBUG]: {2}
-app[DEBUG]: {null}
-app[DEBUG]: {undefined}
-app[DEBUG]: {false}
-app[DEBUG]: {str}
-app[DEBUG]: {23.2}
-app[DEBUG]: {1,2,3}
+app[DEBUG]: {2} {null} {undefined} {false} {str} {23.2} {1,2,3}
 */
 ```
 
@@ -142,9 +136,7 @@ var logger = new Logger({
 logger.debug(2);
 
 /*
-app[DEBUG]: {
-app[DEBUG]: 2
-app[DEBUG]: }
+app[DEBUG]: [ {, 2, } ]
 */
 ```
 
@@ -164,13 +156,13 @@ var logger = new Logger('Routing', {
   }
 });
 
-logger.debug(2);
+logger.debug(2, 3);
 logger.warn('test')
 
 console.log(logMessagesToSend);
 /*
 [
-  ['debug', 'Routing', '2'],
+  ['debug', 'Routing', ['2', '3']],
   ['warn', 'Routing', 'test'],
 ]
 */

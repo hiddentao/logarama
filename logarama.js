@@ -133,7 +133,7 @@
 
     _defaultFormat (arg) {
       try {
-        return this.__defaultFormatHelper(arg)
+        return this.__defaultFormatHelper(arg).join("\n")
       } catch (err) {
         if ('RangeError' === err.name) {
           return '[Object with circular references]';
@@ -144,27 +144,18 @@
     }
     
     
-    
-    _defaultOutput (level, tag, msg) {
-      console[level](`${tag}[${level.toUpperCase()}]: ${msg}`);
+    _defaultOutput (level, tag, args) {
+      console[level].apply(console, [`${tag}[${level.toUpperCase()}]:`, ...args]);
     }
-
-
-    _writeToLog (level, msg) {
-      [].concat(msg).forEach((str) => {
-        this._output(level, this._tag, str)
-      });
-    }
-
 
     _constructLogMethod (level) {
       const self = this
       
       if (LEVELS[level] >= LEVELS[self._minLevel]) {
         this[level] = function() {
-          Array.prototype.slice.call(arguments).forEach(function(arg) {
-            self._writeToLog(level, self._format(arg));
-          });
+          self._output(level, self._tag, 
+            Array.prototype.slice.call(arguments).map(self._format.bind(self))
+          )
         }  
       } else {
         self[level] = self._noop;
