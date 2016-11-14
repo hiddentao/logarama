@@ -32,9 +32,7 @@ logger.debug('this', 'is', 'an', 'array', [1,2,3]);
 [DEBUG]: is
 [DEBUG]: an
 [DEBUG]: array
-[DEBUG]: 1
-2
-3
+[DEBUG]: [ 1, 2, 3 ]
 */
 ```
 
@@ -123,22 +121,6 @@ app[DEBUG]: {2} {null} {undefined} {false} {str} {23.2} {1,2,3}
 */
 ```
 
-If you return an array of strings from your custom formatter, each string 
-gets output on its own line:
-
-```js
-var logger = new Logger({
-  format: function(arg) {
-    return ['{', arg, '}'];
-  }
-});
-
-logger.debug(2);
-
-/*
-app[DEBUG]: [ {, 2, } ]
-*/
-```
 
 **Output targets**
 

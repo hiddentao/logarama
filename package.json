@@ -1,6 +1,6 @@
 {
   "name": "logarama",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Logging for the browser, logging levels, hierarchical child loggers, smart formatting, etc",
   "main": "logarama.min.js",
   "scripts": {

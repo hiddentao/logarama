@@ -68,72 +68,63 @@
     }
 
 
-    __defaultFormatHelper (arg, prefix) {
-      prefix = prefix || ''
-      
-      const lines = []
-      
-      lines.add = (strOrArray) => {
-        [].concat(strOrArray).forEach((s) => {
-          lines.push(`${prefix}${s}`)
-        })
-      }
-      
-      const childPrefix = `  `
+    __defaultFormatHelper (arg) {
+      let str = ''
       
       // Error
       if (arg instanceof Error) {
         if (arg.stack) {
-          lines.add(this.__defaultFormatHelper(arg.stack))
+          str = this.__defaultFormatHelper(arg.stack)
         } else {
-          lines.add('' + arg)
+          str = '' + arg
         }
       } 
       // Array
       else if (arg instanceof Array) {
         if (!arg.length) {
-          lines.add('[]')
+          str = '[]'
         } else {
-          lines.add('[')
-          
-          arg.forEach((a) => {
-            lines.add(this.__defaultFormatHelper(a, childPrefix))
-          })
-          
-          lines.add(']')      
+          str = '[ ' + arg.map((a) => {
+            const r = this.__defaultFormatHelper(a)
+            
+            return (typeof a === 'string' ? `"${r}"` : r)
+          }).join(', ') + ' ]'
         }
       }
       // Object (but not null)
       else if (arg && typeof arg === 'object') {
         if (!Object.keys(arg).length) {
-          lines.add('{}')
+          str = '{}'
         } else {
-          lines.add('{')
+          const items = []
           
           for (let k in arg) {
-            lines.add(`${childPrefix}"${k}":`)
-            lines.add(this.__defaultFormatHelper(arg[k], `${childPrefix}${childPrefix}`))
+            if (typeof arg[k] !== 'function') {
+              const r = this.__defaultFormatHelper(arg[k])
+              
+              items.push(`${k}: ` + (typeof arg[k] === 'string' ? `"${r}"` : r))
+            }
           }
           
-          lines.add('}')      
+          str = '{ ' + items.join(', ') + ' }'
         }
       }
-      // Object (but not null)
+      // Function
       else if (typeof arg === 'function') {
-        lines.add('(function)');
+        str = '<fn>'
       }
       // everything else - primitive values
       else {
-        lines.add(arg + '');
+        str = '' + arg
       }
       
-      return lines;      
+      return str;      
     }
 
 
     _defaultFormat (arg) {
       try {
-        return this.__defaultFormatHelper(arg).join("\n")
+        return this.__defaultFormatHelper(arg)
       } catch (err) {
         if ('RangeError' === err.name) {
           return '[Object with circular references]';
@@ -145,7 +136,9 @@
     
     
     _defaultOutput (level, tag, args) {
-      console[level].apply(console, [`${tag}[${level.toUpperCase()}]:`, ...args]);
+      args.forEach((a) => {
+        console[level](`${tag}[${level.toUpperCase()}]: ${a}`)
+      })
     }
 
     _constructLogMethod (level) {
