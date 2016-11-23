@@ -404,6 +404,28 @@ test['child logger'] = {
     spy.info.should.have.been.calledWithExactly('[INFO]: 1');
   },
 
+  'multiple children': function() {
+    var logger = new Logger({
+      minLevel: 'info'
+    });
+    
+    var child1 = logger.create('child1');
+    var child2 = logger.create('child2');
+    var child2_1 = child2.create('child2_1');
+    
+    logger.info("blah")
+    spy.info.should.have.been.calledWithExactly('[INFO]: blah')
+    
+    child1.info("blah1")
+    spy.info.should.have.been.calledWithExactly('child1[INFO]: blah1')
+
+    child2.info("blah2")
+    spy.info.should.have.been.calledWithExactly('child2[INFO]: blah2')
+
+    child2_1.info("blah2_1")
+    spy.info.should.have.been.calledWithExactly('child2/child2_1[INFO]: blah2_1')
+  }
+
 };
 
 
