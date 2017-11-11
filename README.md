@@ -102,7 +102,7 @@ app[ERROR]: 5
 */
 ```
 
-The `.throw()` method is provided as a convience way of throwing an `Error`
+The `.throw()` method is provided as a convient way of throwing an `Error`
 with the tag as a prefix:
 
 ```js
