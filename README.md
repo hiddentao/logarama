@@ -102,6 +102,16 @@ app[ERROR]: 5
 */
 ```
 
+The `.throw()` method is provided as a convience way of throwing an `Error`
+with the tag as a prefix:
+
+```js
+var logger = new Logger('app');
+
+// same as: throw new Error('(app) an error occurred')
+logger.throw('an error occurred');
+```
+
 **Formatting**
 
 You can override the built-in argument formatter with your own:
@@ -125,7 +135,7 @@ app[DEBUG]: {2} {null} {undefined} {false} {str} {23.2} {1,2,3}
 **Output targets**
 
 
-The default output target is the `console`. You can override this with your 
+The default output target is the `console`. You can override this with your
 own:
 
 
@@ -208,8 +218,8 @@ parent/child[INFO]: 3
 
 ## Browser noConflict
 
-If you're not using a module loader in browser environments then 
-`window.Logger` gets set. You can use `noConflict()` to 
+If you're not using a module loader in browser environments then
+`window.Logger` gets set. You can use `noConflict()` to
 restore the original value of this property:
 
 ```js

@@ -60,15 +60,15 @@ test['basic logger'] = function() {
   spy.debug.should.have.been.calledOnce;
   console.log(JSON.stringify(spy.debug.args))
   spy.debug.should.have.been.calledWithExactly('[DEBUG]: 2');
-  
+
   logger.info(3);
   spy.info.should.have.been.calledOnce;
   spy.info.should.have.been.calledWithExactly('[INFO]: 3');
-  
+
   logger.warn(4);
   spy.warn.should.have.been.calledOnce;
   spy.warn.should.have.been.calledWithExactly('[WARN]: 4');
-  
+
   logger.error(5);
   spy.error.should.have.been.calledOnce;
   spy.error.should.have.been.calledWithExactly('[ERROR]: 5');
@@ -79,7 +79,7 @@ test['set level'] = function() {
   var logger = new Logger({
     minLevel: 'warn'
   });
-  
+
   logger.minLevel().should.eql('warn');
 
   logger.trace(1);
@@ -129,6 +129,23 @@ test['set tag'] = function() {
 };
 
 
+test['throw error'] = {
+  default: function () {
+    var logger = new Logger();
+
+    expect(function() {
+      logger.throw('test')
+    }).throws('test')
+  },
+
+  tag: function () {
+    var logger = new Logger('abc123');
+
+    expect(function() {
+      logger.throw('(abc123) test')
+    }).throws('test')
+  }
+};
 
 
 test['multiple arguments'] = function() {
@@ -177,11 +194,11 @@ test['default formatting'] = {
   'Array': {
     'empty': function() {
       this.logger.info([]);
-      spy.info.should.have.been.calledWithExactly('[INFO]: []');            
+      spy.info.should.have.been.calledWithExactly('[INFO]: []');
     },
     'non-empty': function() {
       this.logger.info([1, 2, 3]);
-      spy.info.should.have.been.calledWithExactly('[INFO]: [ 1, 2, 3 ]');      
+      spy.info.should.have.been.calledWithExactly('[INFO]: [ 1, 2, 3 ]');
     }
   },
 
@@ -193,7 +210,7 @@ test['default formatting'] = {
       this.logger.info(obj);
       spy.info.should.have.been.calledWithExactly('[INFO]: {}');
     },
-    
+
     'non-empty': function() {
       var obj = {
         key1: 1.2,
@@ -205,7 +222,7 @@ test['default formatting'] = {
         key4: [1,2,3,4],
         key5: [
           {
-            key5_1: true            
+            key5_1: true
           }
         ]
       }
@@ -251,7 +268,7 @@ test['custom formatting'] = {
     spy.info.should.have.been.calledWithExactly('[INFO]: 1[object Object]');
     spy.info.should.have.been.calledWithExactly('[INFO]: 12');
   },
-  
+
   'return array': function() {
     var logger = new Logger({
       format: function(arg) {
@@ -270,7 +287,7 @@ test['custom formatting'] = {
 
 test['custom outputter'] = function() {
   var msgs = [];
-  
+
   var logger = new Logger('test', {
     output: function(level, tag, msg) {
       msgs.push([level, tag, msg])
@@ -337,7 +354,7 @@ test['child logger'] = {
     spy.warn.should.have.been.calledWithExactly('mah[WARN]: 2');
   },
 
-  
+
   'can override parent formatter': function() {
     var logger = new Logger({
       format: function() {
@@ -356,7 +373,7 @@ test['child logger'] = {
 
   'inherits parent outputter': function() {
     var msgs = [];
-    
+
     var logger = new Logger({
       output: function() {
         msgs.push(2);
@@ -370,7 +387,7 @@ test['child logger'] = {
 
   'can override parent outputter': function() {
     var msgs = [];
-    
+
     var logger = new Logger({
       output: function(level, tag, msg) {
         msgs.push([level, tag, msg]);
@@ -385,12 +402,12 @@ test['child logger'] = {
     childLogger.warn(1);
     msgs.should.eql([3]);
   },
-  
+
   'tracks parent level changes': function() {
     var logger = new Logger({
       minLevel: 'error'
     });
-    
+
     var childLogger = logger.create({
       minLevel: 'warn'
     });
@@ -408,14 +425,14 @@ test['child logger'] = {
     var logger = new Logger({
       minLevel: 'info'
     });
-    
+
     var child1 = logger.create('child1');
     var child2 = logger.create('child2');
     var child2_1 = child2.create('child2_1');
-    
+
     logger.info("blah")
     spy.info.should.have.been.calledWithExactly('[INFO]: blah')
-    
+
     child1.info("blah1")
     spy.info.should.have.been.calledWithExactly('child1[INFO]: blah1')
 
@@ -427,8 +444,3 @@ test['child logger'] = {
   }
 
 };
-
-
-
-
-

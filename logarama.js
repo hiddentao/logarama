@@ -21,7 +21,7 @@
 
     constructor (tag = null, options = {}) {
       this._children = [];
-      
+
       if (1 === arguments.length && 'string' !== typeof tag) {
         options = tag || {};
         tag = null;
@@ -67,10 +67,16 @@
       });
     }
 
+    throw (err) {
+      const prefix = this._tag ? `(${this._tag}) `: '';
+
+      throw new Error(`${prefix}${err}`)
+    }
+
 
     __defaultFormatHelper (arg) {
       let str = ''
-      
+
       // Error
       if (arg instanceof Error) {
         if (arg.stack) {
@@ -78,7 +84,7 @@
         } else {
           str = '' + arg
         }
-      } 
+      }
       // Array
       else if (arg instanceof Array) {
         if (!arg.length) {
@@ -86,7 +92,7 @@
         } else {
           str = '[ ' + arg.map((a) => {
             const r = this.__defaultFormatHelper(a)
-            
+
             return (typeof a === 'string' ? `"${r}"` : r)
           }).join(', ') + ' ]'
         }
@@ -97,15 +103,15 @@
           str = '{}'
         } else {
           const items = []
-          
+
           for (let k in arg) {
             if (typeof arg[k] !== 'function') {
               const r = this.__defaultFormatHelper(arg[k])
-              
+
               items.push(`${k}: ` + (typeof arg[k] === 'string' ? `"${r}"` : r))
             }
           }
-          
+
           str = '{ ' + items.join(', ') + ' }'
         }
       }
@@ -117,8 +123,8 @@
       else {
         str = '' + arg
       }
-      
-      return str;      
+
+      return str;
     }
 
 
@@ -133,8 +139,8 @@
         }
       }
     }
-    
-    
+
+
     _defaultOutput (level, tag, args) {
       args.forEach((a) => {
         console[level](`${tag}[${level.toUpperCase()}]: ${a}`)
@@ -143,13 +149,13 @@
 
     _constructLogMethod (level) {
       const self = this
-      
+
       if (LEVELS[level] >= LEVELS[self._minLevel]) {
         this[level] = function() {
-          self._output(level, self._tag, 
+          self._output(level, self._tag,
             Array.prototype.slice.call(arguments).map(self._format.bind(self))
           )
-        }  
+        }
       } else {
         self[level] = self._noop;
       }
